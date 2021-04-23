@@ -1,0 +1,31 @@
+---
+title: "Random_Variables"
+author: "Umberto Fasci"
+date: "4/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Random Variables
+
+Numeric outcomes resulting from a random process.
+
+### Simple Example
+
+Define `x` to be 1 if a bead is blue, and red otherwise.
+
+```{r echo=TRUE}
+beads <- rep(c("red", "blue"), times = c(2, 3))
+X <- ifelse(sample(beads, 1) == "blue", 1, 0)
+X2 <- ifelse(sample(beads, 1) == "blue", 1, 0)
+X3 <- ifelse(sample(beads, 1) == "blue", 1, 0)
+X4 <- ifelse(sample(beads, 1) == "blue", 1, 0)
+X
+X2
+X3
+X4
+```
+
