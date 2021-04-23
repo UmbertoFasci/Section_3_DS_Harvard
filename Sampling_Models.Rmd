@@ -1,0 +1,78 @@
+---
+title: "Sampling_Models"
+author: "Umberto Fasci"
+date: "4/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Sampling Models
+
+Sampling models are ubiquitous in data science.
+
+
+### Casino Game Example
+
+Casino games offer a plethora of examples of real-world situations in which sampling models are used to answer specific questions.
+
+#### Roullete
+
+Setting up the colors:
+
+```{r echo=TRUE}
+color <- rep(c("Black", "Red", "Green"), c(18,18,2))
+```
+
+1000 draws where red equals 1 loss for the casino and black equals 1 win for the casino.
+
+```{r echo=TRUE}
+n <- 1000
+x <- sample(ifelse(color == "Red", -1, 1), n, replace = TRUE) # it's a roulette table the colors always remain there per spin.
+x[1:10]
+```
+Now taking the Sampling Model approach to this example:
+
+```{r echo=TRUE}
+x <- sample(c(-1,1), n, replace = TRUE, prob = c(9/19, 10/19))
+S <- sum(x)
+S
+```
+
+S in this case is a random variable. A very important concept is the probability distribution of these random variables. This is the probability of the observed value falling in any given interval.
+
+If we want to define a cumulative distribution function:
+
+$$F(a) = Pr(S \le a)$$
+
+With this we will be able to answer any question related to the probability of events defined by the random variable `S`.
+
+Now, we can estimate the distribution function for the random variable S by using a Monte Carlo simulation to generate many realizations.
+
+### Monte Carlo Simulation Using a Sampling Model
+
+```{r echo=TRUE}
+n <- 1000
+B <- 10000
+S <- replicate(B, {
+  X <- sample(c(-1,1), n, replace = TRUE, prob = c(9/19, 10,19))
+  sum(X)
+})
+mean(S < a)
+```
+
+
+```{r echo=TRUE}
+library(tidyverse)
+
+s <- seq(min(S), max(S), length = 100)
+normal_density <- data.frame(s = s, f = dnorm(s, mean(S), sd(S)))
+data.frame(S = S)%>%
+  ggplot(aes(S, ..density..)) +
+    geom_histogram(color = "black", binwidth = 10) +
+    ylab("Probability") +
+    geom_line(data = normal_density, mapping = aes(s, f), color = "blue")
+```
+
